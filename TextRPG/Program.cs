@@ -358,20 +358,56 @@ namespace TextRPG
                         Console.WriteLine("원하시는 행동을 입력해주세요");
                         Console.Write(">> ");
                         int Index = int.Parse(Console.ReadLine()) - 1;
-                        if (Index <= possessionItem.Length && Index >= 0)
+                        if (Index < possessionItem.Length && Index > -1)
                         {
-                            Array.Clear(possessionItem, Index, 0);
-                            buyItemCHK[Index] = false;
-                            Gold -= everyItemGold[Index];
-                            for (int i = 0; i < 2; i++)
+                            if (EquippedItem[Index] == true)
                             {
-                                int tep = ItemStats[buyCNT, i];
-                                ItemStats[buyCNT, i] = ItemStats[Index, i];
-                                ItemStats[Index, i] = tep;
+                                int startIdx = possessionItem[Index].IndexOf("]");
+                                possessionItem[Index] = possessionItem[Index].Substring(startIdx + 1);
+                                EquippedCNT--;
+                                AttackPower -= MyStats[Index, 0];
+                                defensePower -= MyStats[Index, 1];
+                                APP -= MyStats[Index, 0];
+                                DPP -= MyStats[Index, 1];
+
+                               
                             }
+
+                            for (int i = 0; i < everyItem.Length; i++)
+                            {
+                                if (possessionItem[Index] == everyItem[i]) buyItemCHK[i] = false;
+                            }
+
+
+                            for (int i = Index; i < buyCNT; i++)
+                            {
+                                if (i + 1 == buyCNT)
+                                {
+                                    System.Array.Clear(possessionItem, i, 1);
+                                    MyStats[buyCNT, 0] = 0;
+                                    MyStats[buyCNT, 1] = 0;
+                                    break;
+                                }
+                                else
+                                {
+                                    possessionItem[i] = possessionItem[i + 1];
+                                }
+
+                                for (int j = 0; j < 2; j++)
+                                {
+                                    MyStats[i, j] = MyStats[i + 1, j];
+                                }
+                            }
+
+                           
+                            Gold += buyItemGold[Index] / 100 * 85;
+
+                            buyCNT--;
+                            EquippedItem[buyCNT] = false;
+
                             Console.WriteLine("판매를 완료했습니다.");
                             Console.ReadKey();
-                            buyCNT++;
+
                         }
                         else if (Index == -1)
                         {
