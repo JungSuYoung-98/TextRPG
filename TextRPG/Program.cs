@@ -26,12 +26,11 @@ namespace TextRPG
         static int Level = 01;
         static string Name;
         static string Chad;
-        static int AttackPower = 10;
-        static int defensePower = 5;
+        static float AttackPower = 10;
+        static float defensePower = 5;
         static int Hp = 100;
         static int Gold = 50000;
         static int buyCNT = 0;
-        static int EquippedCNT = 0;
         static int APP = 0;
         static int DPP = 0;
 
@@ -182,29 +181,54 @@ namespace TextRPG
                         int Index = int.Parse(Console.ReadLine()) - 1;
                         if (Index <= possessionItem.Length && Index >= 0)
                         {
-                            if (EquippedItem[Index] == false)
+                            if (EquippedItem[Index] != true)
                             {
-                                possessionItem[Index] = "[E]" + possessionItem[Index];
-                                EquippedItem[Index] = true;
-                                AttackPower += MyStats[Index, 0];
-                                defensePower += MyStats[Index, 1];
-                                APP += MyStats[Index, 0];
-                                DPP += MyStats[Index, 1];
-                                EquippedCNT++;
-
+                                Equipped(Index);
+                                for (int i = 0; i < possessionItem.Length; i++)
+                                {
+                                    if (possessionItem[Index] == possessionItem[i]) continue;
+                                    if (EquippedItem[i] == true && MyStats[i, 0] > 0 && MyStats[Index, 0] > 0) // 무기
+                                    {
+                                        int startIdx = possessionItem[i].IndexOf("]");
+                                        possessionItem[i] = possessionItem[i].Substring(startIdx + 1);
+                                        EquippedItem[i] = false;
+                                        AttackPower -= MyStats[i, 0];
+                                        APP -= MyStats[i, 0];
+                                        if (MyStats[i, 0] > 0)
+                                        {
+                                            defensePower -= MyStats[i, 1];
+                                            DPP -= MyStats[i, 1];
+                                        }
+                                    }
+                                    else if (EquippedItem[i] == true && MyStats[i, 1] > 0 && MyStats[Index, 1] > 0) // 방어구
+                                    {
+                                        int startIdx = possessionItem[i].IndexOf("]");
+                                        possessionItem[i] = possessionItem[i].Substring(startIdx + 1);
+                                        EquippedItem[i] = false;
+                                        defensePower -= MyStats[i, 1];
+                                        DPP -= MyStats[i, 1];
+                                        if (MyStats[i, 0] > 0)
+                                        {
+                                            AttackPower -= MyStats[i, 0];
+                                            APP -= MyStats[i, 0];
+                                        }
+                                    }
+                                    else if (EquippedItem[i] == true && MyStats[i, 0] > 0 && MyStats[i, 1] > 0) // 공+방
+                                    {
+                                        int startIdx = possessionItem[i].IndexOf("]");
+                                        possessionItem[i] = possessionItem[i].Substring(startIdx + 1);
+                                        EquippedItem[i] = false;
+                                        AttackPower -= MyStats[i, 0];
+                                        defensePower -= MyStats[i, 1];
+                                        APP -= MyStats[i, 0];
+                                        DPP -= MyStats[i, 1];
+                                    }
+                                }
                             }
                             else
                             {
-                                int startIdx = possessionItem[Index].IndexOf("]");
-                                possessionItem[Index] = possessionItem[Index].Substring(startIdx + 1);
-                                EquippedItem[Index] = false;
-                                AttackPower -= MyStats[Index, 0];
-                                defensePower -= MyStats[Index, 1];
-                                APP -= MyStats[Index, 0];
-                                DPP -= MyStats[Index, 1];
-                                EquippedCNT--;
+                                Release(Index);
                             }
-
                         }
                         else if (Index == -1)
                         {
@@ -364,13 +388,10 @@ namespace TextRPG
                             {
                                 int startIdx = possessionItem[Index].IndexOf("]");
                                 possessionItem[Index] = possessionItem[Index].Substring(startIdx + 1);
-                                EquippedCNT--;
                                 AttackPower -= MyStats[Index, 0];
                                 defensePower -= MyStats[Index, 1];
                                 APP -= MyStats[Index, 0];
                                 DPP -= MyStats[Index, 1];
-
-                               
                             }
 
                             for (int i = 0; i < everyItem.Length; i++)
@@ -399,7 +420,7 @@ namespace TextRPG
                                 }
                             }
 
-                           
+
                             Gold += buyItemGold[Index] / 100 * 85;
 
                             buyCNT--;
@@ -530,6 +551,36 @@ namespace TextRPG
                     Console.ReadKey();
                 }
             }
+        }
+
+        //장착 메소드
+        static public void Equipped(int Index)
+        {
+            possessionItem[Index] = "[E]" + possessionItem[Index];
+            EquippedItem[Index] = true;
+            AttackPower += MyStats[Index, 0];
+            defensePower += MyStats[Index, 1];
+            APP += MyStats[Index, 0];
+            DPP += MyStats[Index, 1];
+        }
+
+
+        //해제 메소드
+        static public void Release(int Index)
+        {
+            int startIdx = possessionItem[Index].IndexOf("]");
+            possessionItem[Index] = possessionItem[Index].Substring(startIdx + 1);
+            EquippedItem[Index] = false;
+            AttackPower -= MyStats[Index, 0];
+            defensePower -= MyStats[Index, 1];
+            APP -= MyStats[Index, 0];
+            DPP -= MyStats[Index, 1];
+        }
+
+        //던전
+        static public void Dungeon()
+        {
+
         }
     }
 }
