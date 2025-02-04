@@ -585,14 +585,22 @@ namespace TextRPG
                     int Choice = int.Parse(Console.ReadLine());
                     if (Choice > 0 && Choice < 4)
                     {
-                        Clear(Choice);
-                        if (fail)
+                        if (Hp < 0)
                         {
-                            fail = false;
-                            Console.WriteLine();
-                            Console.WriteLine("클리어 실패");
-                            Console.WriteLine("체력이 감소합니다.");
+                            Console.WriteLine("체력이 부족하여 던전에 입장하지 못합니다.");
                             Console.ReadKey();
+                        }
+                        else
+                        {
+                            Clear(Choice);
+                            if (fail)
+                            {
+                                fail = false;
+                                Console.WriteLine();
+                                Console.WriteLine("클리어 실패");
+                                Console.WriteLine("체력이 감소합니다.");
+                                Console.ReadKey();
+                            }
                         }
                     }
                     else if (Choice == 0)
