@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
 
 namespace TextRPG
 {
@@ -25,7 +26,7 @@ namespace TextRPG
         static int[,] MyStats = new int[7, 2];
 
         static string Name;
-        static string Chad;
+        static string Job;
 
         static float AttackPower = 10f;
         static float DefensePower = 5;  
@@ -35,7 +36,7 @@ namespace TextRPG
         static int buyCNT = 0;
         static int APP = 0;
         static int DPP = 0;
-        static int Level = 01;
+        static int Level = 1;
         static int claerCount = 0;
 
         static bool fail = false;
@@ -108,9 +109,9 @@ namespace TextRPG
                 Console.WriteLine("상태 보기");
                 Console.WriteLine("캐릭터의 정보가 표시됩니다.");
                 Console.WriteLine();
-                Console.WriteLine("이름 : {0}", Name);
-                Console.WriteLine("LV {0}", Level);
-                Console.WriteLine("Chad ( {0} )", Chad);
+                Console.WriteLine("LV {0}", string.Format("{0:D2}", Level));
+                Console.Write("{0} ", Name);
+                Console.WriteLine("( {0} )", Job);
                 if (APP > 0)
                 {
                     Console.WriteLine("공격력 :  {0}(+{1})", AttackPower, APP);
@@ -151,7 +152,6 @@ namespace TextRPG
 
             }
         }
-
 
         // 인벤토리
         static public void Inventory()
@@ -294,7 +294,7 @@ namespace TextRPG
                 Console.WriteLine("[보유 골드]");
                 Console.WriteLine("{0} G", Gold);
                 Console.WriteLine();
-                Console.WriteLine("[아이템 목록");
+                Console.WriteLine("[아이템 목록]");
                 for (int i = 0; i < everyItem.Length; i++)
                 {
                     if (buyItemCHK[i] == true)
@@ -528,26 +528,26 @@ namespace TextRPG
             }
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
-                Console.WriteLine("원하시는 직업을 선택해주세요.");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("1. 전사");
-                Console.WriteLine("2. 도적");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
+                    Console.Clear();
+                    Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
+                    Console.WriteLine("원하시는 직업을 선택해주세요.");
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("1. 전사");
+                    Console.WriteLine("2. 도적");
+                    Console.WriteLine();
+                    Console.WriteLine("원하시는 행동을 입력해주세요.");
                 try
                 {
                     int Choice = int.Parse(Console.ReadLine());
                     if (Choice == 1)
                     {
-                        Chad = "전사";
+                        Job = "전사";
                         break;
                     }
                     else if (Choice == 2)
                     {
-                        Chad = "도적";
+                        Job = "도적";
                         break;
                     }
                     else
@@ -781,7 +781,6 @@ namespace TextRPG
             APP += MyStats[Index, 0];
             DPP += MyStats[Index, 1];
         }
-
 
         //해제 
         static public void Release(int Index)
